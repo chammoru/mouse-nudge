@@ -1,0 +1,9 @@
+*.exe
+*.pdb
+*.lnk
+*.tmp
+*.settings.xml
+build/
+dist/
+TestResults/
+.vs/
