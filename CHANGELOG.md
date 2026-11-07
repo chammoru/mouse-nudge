@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.2.1 — 2026-11-07
+
+- Scale the window, control geometry, and fonts together at the current monitor DPI.
+- Handle per-monitor DPI changes, including fractional scales, without cumulative rounding drift.
+- Keep a high-scale window within the work area and make all controls reachable by scrolling on smaller displays.
+- Correct the title's text height and preserve movement preferences across the update.
+- Add layout checks covering 100–500%, fractional scales, native DPI-change messages, handle recreation, and small-screen scrolling, on x64 and x86.
+
 ## 1.2.0 — 2026-11-01
 
 - Move status and the primary start/pause action above settings.

@@ -32,6 +32,7 @@ A small, portable Windows mouse mover with adjustable distance and timing, a glo
 | 알림 영역 | 창 열기 / 시작·일시정지 / 종료. 이미 실행 중이면 기존 창을 복원 |
 | 설정 저장 | 실행 파일 옆 `MouseNudge.settings.xml`. 버전 1.1의 설정 파일도 읽음 |
 | 명령줄 제어 | 숨긴 앱도 `--pause`, `--show`, `--quit`로 제어 |
+| 화면 배율 | 현재 모니터의 DPI에 맞춰 창·입력칸·글꼴을 함께 조정. 배율이 다른 모니터로 이동하면 다시 계산하며, 작은 화면에서는 스크롤로 접근 |
 
 Windows의 마우스 속도·가속 설정 및 화면 가장자리에서는 실제 이동 거리가 달라질 수 있습니다. 오른쪽으로 이동한 뒤 설정을 적용하거나 일시정지하면 이전 거리만큼 먼저 되돌립니다.
 
@@ -69,6 +70,14 @@ if ($check.ExitCode -ne 0) { throw 'Verification failed' }
 ```
 
 자동 검증은 실제 커서를 움직이지 않고 이동 순서, 설정 변경, 저장·복원, 자동 정지와 인스턴스 제어를 검사합니다. UI를 검사할 때는 `-Preview`로 별도 빌드할 수 있습니다. Preview는 실제 입력을 보내지 않습니다.
+
+```powershell
+$check = Start-Process .\dist\MouseNudge.exe -ArgumentList '--layout-test', 'layout-results' -Wait -PassThru
+Get-Content .\layout-results\result.txt
+if ($check.ExitCode -ne 0) { throw 'Layout verification failed' }
+```
+
+배율 검사는 Windows 설정을 바꾸지 않고 실제 앱의 레이아웃 경로에 96–480 DPI(100–500%)와 중간 배율을 적용합니다. 글자 잘림, 입력 범위 표시, 반복적인 배율 전환, `WM_DPICHANGED`, 작은 화면의 스크롤을 검사하며 배율별 PNG를 생성합니다. 물리적인 모니터 간 이동은 별도 확인이 필요합니다. DPI는 [Windows의 창별 DPI API](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getdpiforwindow)와 [DPI 변경 메시지](https://learn.microsoft.com/en-us/windows/win32/hidpi/wm-dpichanged)로 처리합니다. 단일 EXE에서도 같은 동작을 유지하도록 논리 좌표에서 직접 계산하며 `.exe.config`는 필요하지 않습니다.
 
 ## 개인정보와 제거
 
